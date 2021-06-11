@@ -11,8 +11,14 @@ export default {
         .split(/ +/);
       const commandName = args.shift().toLowerCase();
 
-      if (commandName)
-        client.Commands.get(commandName).run({ client, message, args });
+      if (commandName) {
+        const command =
+          client.Commands.get(commandName) ||
+          client.Commands.find(
+            (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
+          );
+        if (command) command.run({ client, message, args });
+      }
     }
   },
 };
